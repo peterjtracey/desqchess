@@ -1,0 +1,64 @@
+<!doctype html>
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <link rel="manifest" href="manifest.json">
+	<title>DESQChess Test Page</title>
+
+	<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Lato:300"/>
+	<link rel='stylesheet' href='css/default.css'/>
+	<link href="js/jquery-ui/jquery-ui.css" rel="stylesheet">
+	<link href="js/jquery-ui/jquery-ui.theme.css" rel="stylesheet">
+
+	<script src="js/jquery.js"></script> <!-- v1.10.2 -->
+	<script src="js/jquery-ui/jquery-ui.js"></script> <!--  jQuery UI - v1.11.0-beta.2 -->
+	<script src="js/jquery-ui/jquery.ui.touch-punch.min.js"></script>
+</head>
+<body>
+	<div id="wrapper">
+		<div class="board"></div>
+		<div class="piece-holder-wrapper">
+		<div class="piece-holder" id="self-pieces">&nbsp;</div>
+		<div class="piece-holder" id="opponent-pieces">&nbsp;</div>
+		</div>
+		<div style="clear: both;"></div>
+	</div>
+	<div id="logo-expand"> 
+		<a href="#" id="hide-sidebar" title="Hide Sidebar" style="color: #fff; text-decoration: none; font-size: 2em;"><img src="img/desqchess.png" height="26" align="left"/></a><br/>
+	</div>
+	<div id="right-column">
+		<div id="cal-wrapper">
+			<div class="calendar"></div>
+			<div class="calendar"></div>
+			<div class="calendar"></div>
+		</div>
+		<div id="piece-form-holder">
+			<div id="choose-piece">
+			<div class="form-header">Choose a Color</div>
+			<form style="margin-top: 1em;">
+			<div id="radio-piece">
+				<input type="radio" id="player-color1" name="radio-player-color" checked="checked"><label for="player-color1">
+					Light</label>
+				<input type="radio" id="player-color2" name="radio-player-color"><label for="player-color2">
+					Dark
+					</label>
+			</div>
+			</form>
+			<div style="width: 100%;"><br/></div>
+			
+			<button id="start-game">Start Game</button>
+			</div>
+		</div>
+		<br/><br/>
+		<hr/>
+			DESQChess - Free software - <a href="
+https://github.com/peterjtracey/desqchess">https://github.com/peterjtracey/desqchess</a>
+
+	</div>
+</body>
+	<script src="js/chess.js"></script>
+	<script src="desqchess.js"></script>
+</html>

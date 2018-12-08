@@ -1,0 +1,129 @@
+body, html {
+	margin: 0;
+	padding: 0;
+	height: 100%;
+	width: 100%;
+	background-color: #000;
+}
+ 
+
+#wrapper {
+	height: 100%;
+	margin: 20px;
+	display: block;
+}
+
+div.board {
+	display: inline-block;
+	margin: 0;
+	padding: 0;
+	padding-top: 0;
+	float: left;
+	background-image: url('../img/backgrounds/wood.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+
+div.piece-holder {
+	height: 40%;
+	width: 90%;
+	display: block;
+	border: #000000 1px solid;
+	margin: 20px;
+}
+div.piece-holder .piece-wrapper {
+	display: inline-block;
+	width: 25%;
+}
+div.board-row {
+	margin: 0;
+	padding: 0;
+}
+
+div.square {
+	width: 11%;
+	float: left;
+	height: 100%;
+	border-width: 2px;
+	border-style: solid;
+	border-color: rgba(255, 255, 255, .4);
+	margin: 0;
+	padding: 0;
+}
+
+div.square-light {
+	background-color: rgba(204, 204, 204, .2);
+}
+
+div.square-dark {
+	background-color: rgba(33, 33, 33, .2);
+}
+
+div.square-droppable {
+	border-width: 2px;
+	border-style: solid;
+	border-color: rgba(51, 102, 255, .6);
+}
+
+div.piece-wrapper {
+	overflow: hidden;
+}
+div.piece-wrapper div {
+	width: 19px;
+	height: 45px;
+	overflow: hidden;
+	margin: auto;
+}
+
+div.square-selected {
+	border-width: 2px;
+	border-style: solid;
+	border-color: rgba(204, 255, 51, .7);
+}
+
+div.square-start {
+	border-width: 2px;
+	border-style: solid;
+	border-color: rgba(51, 102, 255, .7);
+}
+
+img.piece-image {
+	position: relative;
+	top: 0; 
+}
+
+#right-column {
+	position: fixed;
+	top: 60px;
+	right: 50px;
+	width: 140px;
+	overflow-y: auto;
+	z-index: 50;
+	width: 250px;
+	border: #000000 1px solid;
+	height: 50%;
+	background-color: rgba(204, 204, 204, .4);
+}
+
+#logo-expand {
+	position: fixed;
+	top: 0;
+	right: 20px;
+	width: 140px;
+	overflow-y: auto;
+	z-index: 55;
+	width: 150px;
+	background-color: rgba(00, 66, 204, .9);
+}
+
+.form-header {
+	background-color: rgba(204, 204, 204, .5);
+	font-weight: bold;
+	font-size: 1.3em;
+	border-bottom: #999999 1px solid;
+	padding: 0;
+	padding-top: 5px;
+	padding-left: 15px;
+}
+
