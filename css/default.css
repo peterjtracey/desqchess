@@ -31,6 +31,7 @@ div.piece-holder {
 	display: block;
 	border: #000000 1px solid;
 	margin: 20px;
+	clear: both;
 }
 div.piece-holder .piece-wrapper {
 	display: inline-block;
