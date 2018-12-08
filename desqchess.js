@@ -43,24 +43,24 @@ piece_offsets[KNIGHT_ID] = 18 * 5;
 ;(function($, window, document, undefined) {
 	var pluginName = 'desqchess';
 
-	var pieceDiv = $('<div class="piece-wrapper"><div></div></div>');
 	var chessPiece = function (piece_id, color, i, j) {
 		var piece = {
 			id: piece_id,
 			color: color,
 			start_side: j,
 			coords: [i, j],
+			captured_self: -1,
+			captured_opponent: -1,
 			idStr: function () {
-				return this.id + "-" + this.color + "-" + this.start_side;
+				return this.id + "-" + 
+					this.color + "-" + 
+					this.start_side;
 			},
 			pieceElem: function () {
-				curPiece = pieceDiv.clone();
-				var imgTag = $('<image src="' + images[this.color] + '" class="piece-image"/>');
-				var img = imgTag.clone();
-				img.css('left',
-					'-' + piece_offsets[this.id] + "px");
-				curPiece = pieceDiv.clone();
-				curPiece.attr('id', this.idStr());
+				var curPiece =  $('<div id="' + this.idStr() + '" class="piece-wrapper" data-captured_self="' + this.captured_self + '" ' +
+		'data-captured_opponent="' + this.captured_opponent + '"><div></div></div>');
+				var img = $('<image src="' + images[this.color] + '" class="piece-image"/>'
+					).css('left', '-' + piece_offsets[this.id] + "px");
 				curPiece.find('div').append(img);
 				return curPiece;
 			}
@@ -191,11 +191,15 @@ piece_offsets[KNIGHT_ID] = 18 * 5;
 
 			$('#self-pieces').html('');
 			for (var i=0; i<this.capturedPieces.self.length; i++) {
-				$('#self-pieces').append(this.capturedPieces.self[i].pieceElem());
+				if (this.capturedPieces.self[i]) {
+					$('#self-pieces').append(this.capturedPieces.self[i].pieceElem());
+				}
 			}
 			$('#opponent-pieces').html('');
 			for (var i=0; i<this.capturedPieces.opponent.length; i++) {
-				$('#opponent-pieces').append(this.capturedPieces.opponent[i].pieceElem());
+				if (this.capturedPieces.opponent[i]) {
+					$('#opponent-pieces').append(this.capturedPieces.opponent[i].pieceElem());
+				}
 			}
 			
 			this.initUi();
@@ -217,7 +221,6 @@ piece_offsets[KNIGHT_ID] = 18 * 5;
 			$('#self-pieces').html('');
 			$('#opponent-pieces').html('');
 			$('.board-row').each(function () {
-				curPiece = pieceDiv.clone();
 				var img = null;
 				pieceObj = null;
 				isLight = $(this).hasClass('light-side');
@@ -316,11 +319,14 @@ piece_offsets[KNIGHT_ID] = 18 * 5;
 		initUi: function() {
 			var dragElem = null;
 			var game = this;
-			$('.square .piece-wrapper').draggable({
+			$('.piece-wrapper').draggable({
 				snap: '.square',
   			snapMode: "inner",
 				start: function (event, ui) {
-						dragElem = $(this).parent();
+						dragElem = $(this);
+						if (!dragElem.parent().hasClass("piece-holder")) {
+							dragElem = $(this).parent();
+						}
 						dragElem.addClass("square-start");
 				},
 				revert: function (valid) {
@@ -340,7 +346,11 @@ piece_offsets[KNIGHT_ID] = 18 * 5;
 					dragElem.removeClass('square-start');
 					var dropElem = $(this);
 
-					var movePiece = game.squarePiece(dragElem);
+					console.log("CAPTURED?" + dragElem.parent().hasClass("piece-holder"));
+					var movePiece = ((dragElem.parent().hasClass("piece-holder")) ?
+						game.capturedPiece(dragElem) :
+						game.squarePiece(dragElem)
+							);
 					var capturePiece = game.squarePiece(dropElem);
 
 					if (!game.canMove(movePiece, capturePiece)) {
@@ -357,18 +367,59 @@ piece_offsets[KNIGHT_ID] = 18 * 5;
 		};
 
 		game.canMove = function (movePiece, capturePiece) {
-			console.log("CAN MOVE ");
-			console.log(movePiece);
-			console.log(capturePiece);
 			if (capturePiece && movePiece.color == capturePiece.color) {
+				if (capturePiece.id == PAWN_ID &&
+					(capturePiece.coords[0] == 0 ||
+						capturePiece.coords[0] == 7)) {
+					// pawn promotion
+					return true;
+				}
 				return false;
 			}
 			return true;
 		};
 		
+
+		game.onMove = function (movePiece, capturePiece, dragElem, dropElem) {
+			var pawnPromote = false;
+			if (capturePiece) {
+  			if (capturePiece.id == PAWN_ID &&
+					(capturePiece.coords[0] == 0 ||
+						capturePiece.coords[0] == 7)) {
+					// pawn promotion
+					pawnPromote = true;
+				}
+				capturePiece.coords = [-1, -1];
+				if ((capturePiece.color == LIGHT_PIECES && this.options.piece_color == LIGHT_PIECES) || 
+					(capturePiece.color == DARK_PIECES && this.options.piece_color == DARK_PIECES)) {
+					capturePiece.captured_self = this.capturedPieces.self.length;
+					this.capturedPieces.self[this.capturedPieces.self.length] = 
+						capturePiece;
+				} else {
+					capturePiece.captured_opponent = this.capturedPieces.opponent.length;
+					this.capturedPieces.opponent[this.capturedPieces.opponent.length] = 
+						capturePiece;
+				}
+			}
+			var newCoords = dropElem.attr('id').split('-');
+			var newI = parseInt(newCoords[0]);
+			var newJ = parseInt(newCoords[1]);
+			if (dragElem.hasClass("square")) {
+				this.board[newI][newJ] = this.board[movePiece.coords[0]][movePiece.coords[1]];
+				if (!pawnPromote) this.board[movePiece.coords[0]][movePiece.coords[1]] = 0;
+			} else {
+				this.board[newI][newJ] = movePiece;
+				if (!pawnPromote) this.removeCapturedPiece(movePiece);
+			}
+			this.board[newI][newJ].coords = [newI, newJ];
+
+			return false;
+		};
+
 		game.squarePiece = function (squareElem) {
 			if (!squareElem.find('div').first()) return null;
 			var idStr = squareElem.find('div').first().attr('id');
+			console.log(idStr);
 			for (var i=0, j=0; i<this.board.length; i++) {
 				for (j=0; j<this.board[i].length; j++) {
 					if (this.board[i][j] != 0 && this.board[i][j].idStr() == idStr) {
@@ -379,26 +430,26 @@ piece_offsets[KNIGHT_ID] = 18 * 5;
 			return null;
 		};
 		
-		game.onMove = function (movePiece, capturePiece, dragElem, dropElem) {
-			if (capturePiece) {
-				capturePiece.coords = [-1, -1];
-				if ((capturePiece.color == LIGHT_PIECES && this.options.piece_color == LIGHT_PIECES) || 
-					(capturePiece.color == DARK_PIECES && this.options.piece_color == DARK_PIECES)) {
-					this.capturedPieces.self[this.capturedPieces.self.length] = 
-						capturePiece;
-				} else {
-					this.capturedPieces.opponent[this.capturedPieces.opponent.length] = 
-						capturePiece;
-				}
+		game.capturedPiece = function (pieceElem) {
+			var indexSelf = parseInt(pieceElem.data("captured_self"));
+			var indexOpp = parseInt(pieceElem.data("captured_opponent"));
+			if (indexSelf > -1) {
+				return this.capturedPieces.self[indexSelf];
 			}
-			var newCoords = dropElem.attr('id').split('-');
-			var newI = parseInt(newCoords[0]);
-			var newJ = parseInt(newCoords[1]);
-			this.board[newI][newJ] = this.board[movePiece.coords[0]][movePiece.coords[1]];
-			this.board[movePiece.coords[0]][movePiece.coords[1]] = 0;
-			this.board[newI][newJ].coords = [newI, newJ];
+			if (indexOpp > -1) {
+				return this.capturedPieces.opponent[indexOpp];
+			}
+		};
 
-			return false;
+		game.removeCapturedPiece = function (piece) {
+			if (piece.captured_self > -1) {
+				this.capturedPieces.self[piece.captured_self] = null;
+			}
+			if (piece.captured_opponent > -1) {
+				this.capturedPieces.opponent[piece.captured_opponent] = null;
+			}
+			piece.captured_self = -1;
+			piece.captured_opponent = -1;
 		};
 
 		return game;
