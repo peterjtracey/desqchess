@@ -149,7 +149,7 @@ piece_offsets[KNIGHT_ID] = 18 * 5;
 			boardBox.find('.board-row').css('width', boardWidth + "px");
 			//boardBox.height(boardHeight);
 			//boardBox.css('width', boardWidth).css('height', boardHeight);
-			$('.piece-holder-wrapper').css('height', boardHeight + "px");
+			//$('.piece-holder-wrapper').css('height', boardHeight + "px");
 			
 			return this.options.game_id;
 		},
