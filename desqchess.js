@@ -95,7 +95,7 @@ piece_offsets[KNIGHT_ID] = 18 * 5;
 			console.log(this.options);
 			var boardBox = $(this.options.board);
 			 
-			var windowWidth = $(window).width();
+			var windowWidth = $(window).width() > 650 ? $(window).width() : 650;
 			var boardHeight = 
 				((windowWidth > $(window).height()) ?
 				$(window).height() - 44 : windowWidth - 140); 
