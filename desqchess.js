@@ -29,16 +29,16 @@ var lang = [
 ];
 
 var images = [];
-images[LIGHT_PIECES] = 'img/pieces/chesswhite-s.png';
-images[DARK_PIECES] = 'img/pieces/chessblack-s.png';
+images[LIGHT_PIECES] = 'img/pieces/chesswhite-i.png';
+images[DARK_PIECES] = 'img/pieces/chessblack-i.png';
 
 var piece_offsets = [];
-piece_offsets[PAWN_ID] = 0;
-piece_offsets[KING_ID] = 20;
-piece_offsets[QUEEN_ID] = 18 * 2;
-piece_offsets[BISHOP_ID] = 18 * 3;
-piece_offsets[ROOK_ID] = 18 * 4;
-piece_offsets[KNIGHT_ID] = 18 * 5;
+piece_offsets[PAWN_ID] = 286;
+piece_offsets[KING_ID] = 136;
+piece_offsets[QUEEN_ID] = 183;
+piece_offsets[BISHOP_ID] = 90;
+piece_offsets[ROOK_ID] = 0;
+piece_offsets[KNIGHT_ID] = 44;
 
 ;(function($, window, document, undefined) {
 	var pluginName = 'desqchess';
@@ -96,9 +96,13 @@ piece_offsets[KNIGHT_ID] = 18 * 5;
 			var boardBox = $(this.options.board);
 			 
 			var windowWidth = $(window).width() > 650 ? $(window).width() : 650;
+			if (windowWidth > 900) {
+				windowWidth = 900;
+			}
 			var boardHeight = 
 				((windowWidth > $(window).height()) ?
 				$(window).height() - 44 : windowWidth - 140); 
+			if (boardHeight <= 350) boardHeight = 350;
 			
 
 

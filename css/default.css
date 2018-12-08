@@ -71,8 +71,9 @@ div.piece-wrapper {
 	overflow: hidden;
 }
 div.piece-wrapper div {
-	width: 19px;
+	width: 42px;
 	height: 45px;
+	padding-top: 2px;
 	overflow: hidden;
 	margin: auto;
 }
