@@ -8,7 +8,7 @@ A working demo page is included as [demo.html](https://peterjtracey.github.io/de
 
 All though the foundation has this simple goal, with the design being a very simple jQuery plugin it can be modified relatively easily to add multiplayer across network functionality, AI computer players, display and animation of the game UI with WebGL and so on. 
 
-One critical piece missing for a 1.0 release is taking back of moves that involve captures. Also pawn promotion is a must. These will be added before the end of the year.
+With the release of beta 1 (0.1.0) testing of features that make the plugin functionally complete is starting and a 1.0 will be released after any issues are resolved. Sorely lacking and needed for a 1.0 release, also, are sounds when moves happen and a move history list (may just be required to implement events via the API as with game saving/restoring).
 
 Other ideas for the short-term are a move list with undo/redo capabilities, events and methods to make tying into more sophisticated systems simpler, and an animation UI middle layer. Any other desired additions are welcome either as contributions or suggestions in the issue tracker.
 
@@ -17,6 +17,7 @@ Version 0.0.4: Close to drawing a chess board.
 Version 0.0.6: Draws boards, background, buttons to start, pieces
 Version 0.0.8: Moving pieces works in a rudimentary way (moving a piece again fails)
 Version 0.0.9: Moving works. Ready to add move rules, move AI.
+Version 0.1.0: Beta 1! Now supports taking back moves of captured pieces, pawn promotion (drag any piece to a pawn on last row) and saving/restoring game data (needs to be used from APIish calls) -- see [https://askus.chat/chess](https://askus.chat/chess "Multiplayer Chess") for example of multiplayer chess from a web page utilizing these calls -- documentation rather than just examples to come
 
 --------------------
 LGPL - 2014
@@ -33,12 +34,16 @@ Credits:
 Original Author: Peter Tracey
 Contributors:
 (contributors welcome!)
-Credits for the background images are included in a notes.txt file in that directory.
+Credits for the background images and piece icons are included in a notes.txt files in those paths.
 
 --------------------
 Project Page:
 
 https://github.com/peterjtracey/desqchess
+
+# Find a game! 
+## Play against opponents across the Internet with an app based on this project:
+[https://askus.chat/chess](https://askus.chat/chess "Multiplayer Chess")
 
 (Originally open-sourced on sourceforge 2014
 https://sourceforge.net/projects/desqchess3/)

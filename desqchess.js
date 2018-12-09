@@ -1,10 +1,13 @@
 /*
 DESQCHESS - 0.0.1 - 12/8/2018
 LGPL license
-https://github.com/peterjtracey/timezoneWidget
+https://github.com/peterjtracey/desqchess
 */
 var LIGHT_PIECES = 0;
 var DARK_PIECES = 1;
+
+var GAME_ID_DEFAULT = 1;
+var game;
 
 var SIDE_QUEEN = 0;
 var SIDE_KING = 1;
@@ -29,8 +32,8 @@ var lang = [
 ];
 
 var images = [];
-images[LIGHT_PIECES] = 'img/pieces/chesswhite-i.png';
-images[DARK_PIECES] = 'img/pieces/chessblack-i.png';
+images[LIGHT_PIECES] = '/desqchess/img/pieces/chesswhite-i.png';
+images[DARK_PIECES] = '/desqchess/img/pieces/chessblack-i.png';
 
 var piece_offsets = [];
 piece_offsets[PAWN_ID] = 286;
@@ -75,7 +78,10 @@ piece_offsets[KNIGHT_ID] = 44;
 			piece_holder: '#piece-holder',
 			game_id: GAME_ID_DEFAULT,
 			piece_color: null,
-			piece_offsets: []
+			piece_offsets: [],
+			change: function () {
+				console.log("change not handled")
+			}
 		},
 		board: [],
 		capturedPieces: {
@@ -417,7 +423,63 @@ piece_offsets[KNIGHT_ID] = 44;
 			}
 			this.board[newI][newJ].coords = [newI, newJ];
 
+			this.options.change(this.createObject(movePiece.coords, [newI, newJ]));
+
 			return false;
+		};
+
+		game.createObject = function (from, to) {
+			return {
+				fromCoords: from,
+				toCoords: to,
+				board: this.board,
+				// reverse for sending to opponent
+				capturedPieces: {self: this.capturedPieces.opponent, 
+					opponent: this.capturedPieces.self}
+			};
+		};
+
+		game.loadObject = function (gameObj, reverse) {
+			for (var i=0,k=gameObj.board.length-1; i<gameObj.board.length; i++, k--) {
+				for (var j=0; j<gameObj.board[i].length; j++) {
+					var reverseRow = k;
+					// piece_id, color, i, j
+					if (gameObj.board[i][j]) {
+						this.board[k][j] = chessPiece(
+							gameObj.board[i][j].id,
+							gameObj.board[i][j].color,
+							k,
+							j 
+							)
+					} else {
+						this.board[k][j] = 0;
+					}
+				}
+			}
+			this.capturedPieces = gameObj.capturedPieces;
+			for (var i=0; i<this.capturedPieces.self.length; i++) {
+				if (this.capturedPieces.self[i]) {
+					this.capturedPieces.self[i] = chessPiece(
+						this.capturedPieces.self[i].piece_id,
+						this.capturedPieces.self[i].color,
+						0,
+						0 
+						)
+					this.capturedPieces.self[i].captured_self = i;
+				}
+			}
+			for (var i=0; i<this.capturedPieces.opponent.length; i++) {
+				if (this.capturedPieces.opponent[i]) {
+					this.capturedPieces.opponent[i] = chessPiece(
+						this.capturedPieces.opponent[i].piece_id,
+						this.capturedPieces.opponent[i].color,
+						0,
+						0 
+						)
+					this.capturedPieces.opponent[i].captured_opponent = i;
+				}
+			}
+			game.redraw();
 		};
 
 		game.squarePiece = function (squareElem) {
@@ -465,14 +527,14 @@ piece_offsets[KNIGHT_ID] = 44;
 		switch (fname) {
 		case 'init' :
 			var game = chessGame(game_id); 
-			$.extend(game.options, optArg);
+			game.options = $.extend(game.options, optArg);
 			game.init();
 			game.draw();
 			$.data(this, pluginName, game_id);
 			games[game_id] = game;
 			break;
 		case 'get_game' :
-			return ((games[options.game_id]) ? games[options.game_id] : games[GAME_ID_DEFAULT]);
+			return ((games[game_id]) ? games[game_id] : games[GAME_ID_DEFAULT]);
 		case 'start' :
 			console.log('start...');
 			if (!games[game_id] || games[game_id].started) return null;
