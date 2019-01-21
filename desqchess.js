@@ -41,9 +41,9 @@ piece_offsets[KING_ID] = 136;
 piece_offsets[QUEEN_ID] = 183;
 piece_offsets[BISHOP_ID] = 90;
 piece_offsets[ROOK_ID] = 0;
-piece_offsets[KNIGHT_ID] = 44;
+piece_offsets[KNIGHT_ID] = 42;
 
-;(function($, window, document, undefined) {
+(function($, window, document, undefined) {
 	var pluginName = 'desqchess';
 
 	var chessPiece = function (piece_id, color, i, j) {
@@ -96,6 +96,9 @@ piece_offsets[KNIGHT_ID] = 44;
 				}
 			}
 		},
+
+		boardHistory: [],
+		historyIndex: 0,
 
 		draw : function () {
 			console.log(this.options);
@@ -160,7 +163,7 @@ piece_offsets[KNIGHT_ID] = 44;
 			//boardBox.height(boardHeight);
 			//boardBox.css('width', boardWidth).css('height', boardHeight);
 			//$('.piece-holder-wrapper').css('height', boardHeight + "px");
-			
+
 			return this.options.game_id;
 		},
 	
@@ -318,6 +321,8 @@ piece_offsets[KNIGHT_ID] = 44;
 			
 			this.board = board;
 
+			this.boardHistory = [this.createObject([0, 0], [0, 0])];
+
 			$('.piece-wrapper').width(this.options.squareWidth);
 			$('.piece-wrapper').height(this.options.squareHeight);
 
@@ -391,6 +396,12 @@ piece_offsets[KNIGHT_ID] = 44;
 		
 
 		game.onMove = function (movePiece, capturePiece, dragElem, dropElem) {
+			this.historyIndex++;
+			console.log("HISTORY ENTRY: " + this.historyIndex);
+			console.log("OBJECT TO SAVE");
+			console.log(this.board);
+			this.boardHistory[this.historyIndex] = this.createObject(movePiece.coords, [newI, newJ]);
+
 			var pawnPromote = false;
 			if (capturePiece) {
   			if (capturePiece.id == PAWN_ID &&
@@ -440,21 +451,26 @@ piece_offsets[KNIGHT_ID] = 44;
 		};
 
 		game.loadObject = function (gameObj, reverse) {
-			for (var i=0,k=gameObj.board.length-1; i<gameObj.board.length; i++, k--) {
-				for (var j=0; j<gameObj.board[i].length; j++) {
-					var reverseRow = k;
-					// piece_id, color, i, j
-					if (gameObj.board[i][j]) {
-						this.board[k][j] = chessPiece(
-							gameObj.board[i][j].id,
-							gameObj.board[i][j].color,
-							k,
-							j 
-							)
-					} else {
-						this.board[k][j] = 0;
+			if (reverse === true) {
+				console.log("REVERSE");
+				for (var i=0,k=gameObj.board.length-1; i<gameObj.board.length; i++, k--) {
+					for (var j=0; j<gameObj.board[i].length; j++) {
+						var reverseRow = k;
+						// piece_id, color, i, j
+						if (gameObj.board[i][j]) {
+							this.board[k][j] = chessPiece(
+								gameObj.board[i][j].id,
+								gameObj.board[i][j].color,
+								k,
+								j 
+								)
+						} else {
+							this.board[k][j] = 0;
+						}
 					}
 				}
+			} else {
+				this.board = gameObj.board;
 			}
 			this.capturedPieces = gameObj.capturedPieces;
 			for (var i=0; i<this.capturedPieces.self.length; i++) {
@@ -518,12 +534,20 @@ piece_offsets[KNIGHT_ID] = 44;
 			piece.captured_opponent = -1;
 		};
 
+		game.hasUndo = function () {
+			return (this.historyIndex > 0 && this.boardHistory.length > 1);
+		}
+
+		game.hasRedo = function () {
+			return (this.historyIndex != (this.boardHistory.length - 1));
+		}
+
 		return game;
 	}
 	var games = [];
 
 	$.fn[pluginName] = function(fname, optArg) {
-		var game_id = $.data(this, pluginName, GAME_ID_DEFAULT);
+		var game_id = 0; //$.data(this, pluginName, GAME_ID_DEFAULT);
 		switch (fname) {
 		case 'init' :
 			var game = chessGame(game_id); 
@@ -543,9 +567,26 @@ piece_offsets[KNIGHT_ID] = 44;
 			console.log('started!');
 			game_id = games[game_id].options.game_id;
 			break;
+		case 'undo' :
+			var game = games[game_id];
+			console.log("INDEX: " + (game.historyIndex));
+			console.log(game.boardHistory[game.historyIndex]);
+	  	if (game.hasUndo()) {
+	  		game.loadObject(game.boardHistory[game.historyIndex - 1], false);
+	  		game.historyIndex--;
+		  }
+			break;
+		case 'redo' :
+			var game = games[game_id];
+	  	if (game.hasRedo()) {
+	  		game.loadObject(game.boardHistory[game.historyIndex + 1], false);
+		  	game.historyIndex = game.historyIndex++;
+		  }
+			break;
 		}
 		return game_id;
 	};
+
 	$(window).resize(function() {
 		for (var game_id in games) {
 			games[game_id].redraw(game_id);

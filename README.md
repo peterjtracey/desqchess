@@ -2,6 +2,8 @@
 ## V0.1.0 (beta 1) - 2018
 ## Simple chess app jQuery Plugin - HTML5/CSS3/jQuery/jQueryUI
 
+### Update 1/21/2019 - beta 2 is here and beta 3 is coming this week. Beta 2 has more functionality in the core plugin, but 3 will include a new advanced version these were needed for that has far more functionality and will be the basis for the 1.0 release. It includes undo/redo, zoom by buttons (zoom on mobile becomes difficult when there are many pieces: finding an open area to two-finger zoom becomes a problem), multiplayer mode for games across the Internet, and many more features. Watch the project to be alerted on these releases. The official 1.0 should be next week or early February - depends on the amount of revision needed in beta 2.
+
 DesqChess is a chess app that functions as a physical chess board at its core. It allows just about any move (as a real chess board does) so counts on players being physically present and well-behaved. An example would be pulling it up on a tablet in place of an actual chess board - it is touch-screen compatible thanks to the jQuery UI add-on touch-punch.
 
 A working demo page is included as [demo.html](https://peterjtracey.github.io/desqchess/demo.html "Minimal Demo of JQuery DESQChess")
@@ -43,7 +45,7 @@ https://github.com/peterjtracey/desqchess
 
 # Find a game! 
 ## Play against opponents across the Internet with an app based on this project:
-[https://askus.chat/chess](https://askus.chat/chess "Multiplayer Chess")
+[https://desqchess.club](https://desqchess.club "Multiplayer Chess")
 
 (Originally open-sourced on sourceforge 2014
 https://sourceforge.net/projects/desqchess3/)
