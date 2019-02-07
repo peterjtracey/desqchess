@@ -1,0 +1,288 @@
+<?php
+
+$req = array_key_exists("raq", $_GET) ?
+  $_GET['req'] : 
+  "";
+
+$roomname = preg_replace("/[^A-Za-z0-9\_'\-]", "", $req);
+
+?><!doctype html>
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="initial-scale=1.0,shrink-to-fit=no" id="Viewport">
+        <link rel="manifest" href="manifest.json">
+	<title>DESQChess - Home</title>
+
+    <!-- Bootstrap 4.2 darkly -->
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="css/bootstrap.min.css">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+	<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300"/>
+	<link rel='stylesheet' href='css/default.css'/>
+	<link rel='stylesheet' href='css/advanced.css'/>
+	<link href="js/jquery-ui/jquery-ui.css" rel="stylesheet">
+
+        <link rel="stylesheet" href="chosen/chosen.css">
+
+        <link rel="stylesheet" href="css/jquery.timezonewidget.css">
+
+    <!-- Chosen -->
+    <link rel="stylesheet" href="chosen/chosen.css">
+    <!-- askus -->
+    <link rel="stylesheet" href="css/askus.css">
+    <!-- desq -->
+    <link rel="stylesheet" href="css/askus.css">
+
+    <!-- font awesome -- yes, belongs in <head> -->
+    <script defer src="fontawesome/js/all.min.js"></script> <!--load all styles -->
+
+</head>
+<body>
+  <div id="fb-root"></div>
+<script>
+window.fbAsyncInit = function() {
+  console.log("FB INIT?????");
+    FB.init({
+      appId      : '1996744650411227',
+      cookie     : true,  // enable cookies to allow the server to access 
+                          // the session
+      xfbml      : true,  // parse social plugins on this page
+      version    : 'v3.2' // The Graph API version to use for the call
+    });
+
+    // Now that we've initialized the JavaScript SDK, we call 
+    // FB.getLoginStatus().  This function gets the state of the
+    // person visiting this page and can return one of three states to
+    // the callback you provide.  They can be:
+    //
+    // 1. Logged into your app ('connected')
+    // 2. Logged into Facebook, but not your app ('not_authorized')
+    // 3. Not logged into Facebook and can't tell if they are logged into
+    //    your app or not.
+    //
+    // These three cases are handled in the callback function.
+
+    FB.getLoginStatus(function(response) {
+      console.log("FB GET LOGIN STATUS!!");
+      statusChangeCallback(response);
+    });
+
+  };
+
+(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = 'https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v3.2&appId=1996744650411227&autoLogAppEvents=1';
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));
+
+
+</script>
+
+
+  <div id="desqsplash" style="width: 100%; height: 100%;">
+    <div id="desqsplash-inner">
+      <img src="/img/desqsplash.jpg" style="display: none;" id="desqsplash-image"/>
+    </div>
+  </div>
+
+  <nav id="top-menu">
+    <ul class="menu">
+      <li>
+      <button id="settings-trigger-pullicon" class="btn btn-primary">
+        <i class="fa fa-bars" id="desq-menu-icon"></i>
+    <div class="logo-container">
+    <img src="/img/desqlogo.png" height="26" align="left" id="branding-logo"/>
+      </div> </button>
+      </li>
+      <li>
+        <button id="zoom-out" class="btn btn-icon btn-secondary">
+        <i class="fa fa-search-minus"></i> 
+      </button>
+    </li>
+      <li>
+        <button id="zoom-in" class="btn btn-icon btn-secondary">
+        <i class="fa fa-search-plus"></i> 
+        </button>
+      </li>
+      <li>
+        <button id="btn-undo" class="btn btn-icon btn-secondary">
+        <i class="fa fa-undo-alt"></i> 
+      </button>
+      </li>
+      <li>
+        <button id="btn-redo" class="btn btn-icon btn-secondary" disabled="disabled">
+        <i class="fa fa-redo-alt"></i> 
+      </button>
+      </li>
+      <li>
+       
+      <button id="chat-trigger-pullicon" class="btn btn-success"> 
+        <img src="/img/desqchat.png" height="32" align="left"/>DesqChat    
+      </li>
+      <li>
+    <div class="fb-login-button" 
+    data-max-rows="1"
+    data-size="large"
+    data-button-type="continue_with"
+    data-use-continue-as="true" 
+     onlogin="checkLoginState();"></div>
+</div>
+      </li>
+    </ul>
+  </nav>
+	<div id="wrapper">
+		<div class="board"></div>
+		<div class="piece-holder-wrapper">
+			<div class="piece-holder" id="self-pieces">&nbsp;</div>
+			<div class="piece-holder" id="opponent-pieces">&nbsp;</div>
+		</div>
+		<div style="clear: both;"></div>
+	</div>
+
+  <div id="settings-column"> 
+    <div class="slidereveal-heading">
+    <i class="fa fa-arrow-circle-left slide-close" style="font-size: 2em;" id="close-settings"></i>
+  </div>  
+    <div id="piece-form-holder">
+      <h1>Start Game</h1>
+      <div id="choose-piece">
+      <form style="margin-top: 1em;">
+      <label for="radio-piece">Choose a Color</label>
+      <div id="radio-piece">
+        <input type="radio" id="player-color1" name="radio-player-color" checked="checked"><label for="player-color1">
+          Light</label>
+        <input type="radio" id="player-color2" name="radio-player-color"><label for="player-color2">
+          Dark
+          </label>
+      </div>
+      </form>
+      <div style="width: 100%;"><br/></div>
+      
+      <button id="start-game" class="btn btn-success">Start Game</button>
+      </div>
+    </div>
+    <hr/>
+    <div id="user_info_fb"></div>
+    <button id="open_chat">Find a Game</button>
+    <br/><br/>
+    <hr/>
+      DESQChess - Free software - <a href="
+https://github.com/peterjtracey/desqchess">https://github.com/peterjtracey/desqchess</a>
+
+  </div>
+
+
+<!-- MULTIPLAYER -->
+<div id="auc_wrapper">
+        <div id="askus_room_header" class="slidereveal-heading">
+          <img src="/img/desqchat.png" height="32" align="left"/> 
+            DESQChat <h1 id="askus_room_title">&nbsp;</h1>    <i class="fa fa-arrow-circle-left slide-close"></i>
+        </div>
+
+<form name="askus_send" onsubmit="javascript: return false;">
+
+<input type="hidden" name="askus_sid" value=""/>
+<input type="hidden" name="askus_hostname" value=""/>
+<input type="hidden" name="askus_userid" value="0"/>
+<input type="hidden" name="askus_roomid" value="0"/>
+<input type="hidden" name="askus_roomname" id="askus_roomname" value="<?php echo $roomname; ?>">
+
+
+<div id="askus_chat_container">
+<div id="askus_left_panel">
+        <div id="askus_content">
+            <div id="askus_messages">
+
+            </div>
+            <div id="askus_contentbottom">&nbsp;</div>
+        </div>
+    
+    <div id="askus_bottom_panel">
+
+        <input type="text" name="askus_sendtext" value="type here" SIZE="49" STYLE="width: 80%;" onclick="javascript: if (this.value == 'type here') this.value='';" onkeydown="javascript: if (this.value == 'type here') this.value='';" onkeypress="javascript:if (event.keyCode == 13) { askuschat.sendmessage(); this.value = ''; event.returnValue = false; }" autocomplete="off"/>
+        <button id="askus_send_button" onclick="javascript: askuschat.sendmessage(); this.value = '';">Send</button>
+
+    </div>
+</div>
+<div id="askus_right_panel" style="padding: 2px;">
+    <div id="askus_container_sendas">
+        <label> Your Name: </label>
+        <br/>
+        <input type="text" name="askus_name" id="askus_name" value="" placeholder="Guest" onblur="askuschat.changename();"/> <br/><br/>
+    </div>
+    <div align="center" style="color: #FFFFFF; font-weight: bold;">Experts</div>
+            <div id="askus_moderatorlist">
+                <div id="askus_moderators">
+                </div>
+                <div id="moderatorlistbottom">&nbsp;</div>
+            </div>
+            <div align="center" style="">Guests</div>
+            <div id="askus_userlist">
+                <div id="askus_users">
+                </div>
+                <div id="userlistbottom">&nbsp;</div>
+            </div>
+        <div style="clear: both;"></div>
+</div>
+        <div style="clear: both;"></div>
+</div>
+
+<textarea name="debug" style="display: none;"></textarea>
+</form>
+</div>
+
+<!-- /MULTIPLAYER -->
+
+
+
+
+
+
+
+
+
+</body>
+
+  <script src="js/jquery-ui/external/jquery/jquery.js"></script> <!-- v1.10.2 -->
+  <script src="js/jquery-ui/jquery-ui.js"></script> <!--  jQuery UI - v1.11.0-beta.2 -->
+  <script src="js/jquery-ui/jquery.ui.touch-punch.min.js"></script>
+
+<!-- moment -->
+<script src="/js/moment/moment.js"></script>
+<script src="/js/moment/moment-timezone-with-data.js"></script>
+<!-- chosen -->
+<script src="/js/chosen/chosen.jquery.min.js" type="text/javascript"></script>
+
+<!-- cookies-js -->
+<script src="/js/cookies/js.cookie-2.2.0.min.js" type="text/javascript"></script>
+
+<script src="/js/ion-sound/js/ion.sound.min.js"></script>
+  <script src="js/slideReveal/jquery.slidereveal.min.js"></script>
+  <script src="desqchess.js"></script>
+  <script src="js/jquery.timezonewidget.data.js"></script>
+  <script src="js/jquery.timezonewidget.js"></script>
+  <script src="js/desqchat.js"></script>
+  <script src="js/chess.js"></script>
+
+
+<script>
+var desqReq = <?php echo $req; ?>
+var askuschat = { init: function (key, callback) { 
+console.log("LOAD FAILED");
+window.setTimeout(function () {
+    askuschat.init(key, callback);
+}, 500);
+ }
+ }; // global variable
+</script>
+<script src="js/askus.chat.core.js"></script>
+
+</html>

@@ -1,0 +1,134 @@
+body, html {
+	margin: 0;
+	padding: 0;
+	height: 100%;
+	width: 100%;
+}
+
+#wrapper {
+	margin-top: 75px;
+}
+#settings-column, #auc_wrapper {
+	padding-top: 44px;
+}
+ h1 {
+ 	font-size: 1.2em;
+ }
+
+ #user_info_fb {
+ 	display: none;
+ }
+ #open_chat {
+ 	display: none;
+ }
+ #auc_toggle {
+ 	cursor: pointer;
+ }
+ #desq-menu-icon {
+ 	float: left;
+ 	font-size: 32px;
+ 	font-weight: 900;
+ }
+#branding-logo {
+	float: right;
+}
+nav {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 52px;
+	vertical-align: middle;
+	background-color: transparent !important;
+	background-image: linear-gradient(to bottom,#e8e8e8 0,#7c7cfc 100%) !important;
+	background-repeat: repeat-x;
+	border-left: #000 2px solid;
+	padding: 4px;
+	z-index: 50000;
+}
+nav button, 
+nav button i {
+	font-size: 42px;
+}
+nav button i {
+	width: 1.6em;
+}
+nav div.logo-container {
+	width: 84px;
+	float: right;
+}
+#settings-trigger-pullicon {
+	width: 150px;
+	height: 100%;
+}
+#settings-trigger-pullicon, #chat-trigger-pullicon {
+	margin: 0;
+	height: 48px;
+	color: #fff;
+	vertical-align: middle;
+	text-align: middle;
+}
+#chat-trigger-pullicon img {
+	margin-right: 8px;
+}
+ul.menu {
+	margin: 0;
+	padding: 0;
+}
+ul.menu li {
+	height: 48px;
+	list-style: none;
+	display: inline-block;
+	vertical-align: top;
+	margin: 0;
+	padding: 0;
+}
+#chat-trigger-pullicon {
+	display: none;
+	background-color: #37a669;
+}
+#askus_chat_container {
+	background: rgba(230, 230, 230, .4);
+}
+#settings-column {
+	background: rgba(51, 51, 51, .8);
+}
+#settings-column h1, #settings-column .slidereveal-heading, #settings-column label {
+		color: #fff; 
+		
+	}
+	.logo-container {
+		color: #fff;
+	}
+
+#wrapper.zoomed {
+    zoom: 2;
+    -moz-transform: scale(2);
+    -moz-transform-origin: 0 0;
+}
+
+#desqsplash {
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 70005;
+	width: 100%;
+	height: 100%;
+	background-color: #000;
+	vertical-align: middle;
+	text-align: center;
+}
+
+#desqsplash-inner {
+	margin: auto 0;
+
+}
+#desqsplash-inner img {
+	height: 100%;
+}
+.slidereveal-heading i {
+	font-size: 3em;
+}
+.slide-close {
+	float: right;
+}
