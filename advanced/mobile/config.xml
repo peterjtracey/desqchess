@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<widget xmlns   = "http://www.w3.org/ns/widgets"
+    xmlns:gap   = "http://phonegap.com/ns/1.0"
+    id          = "com.unlocktc.desqchess"
+    versionCode = "10"
+    version     = "1.0.0" >
+
+
+  <name>DESQChess</name>
+
+  <description>
+      Chess in person using your device as a board, with Facebook frie http://desqchess.club
+  </description>
+
+  <author href="http://desqchess.club" email="info@unlocktc.com">
+      Unlock Technology
+  </author>
+
+</widget>
